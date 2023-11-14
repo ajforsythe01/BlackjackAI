@@ -15,6 +15,7 @@ class Blackjack:
     class Hand:
         def __init__(self, deck):
             self.hand = []
+            self.soft = False
             for i in range(2):
                 card = self.convert(deck.pop())
                 self.hand.append(card)
@@ -50,12 +51,14 @@ class Blackjack:
                     total += card
 
             # Calculate the total with Ace value consideration
+            self.soft = False
             for _ in range(num_aces):
                 if total + 11 <= 21:
                     total += 11
+                    self.soft = True
                 else:
                     total += 1
-
+                    
             return total
         
         def difference21(self):
@@ -67,19 +70,25 @@ class Blackjack:
             return False
         
         def has_ace(self):
-            return "A" in self.hand
+            if len(self.hand) == 2:
+                return "A" in self.hand
+            return False
+
+        def is_soft(self):
+            return self.soft
             
         def has_pair(self):
-            ranks = []
-            for card in self.hand:
-                if card == "10" or card in ["J", "Q", "K"]:
-                    ranks.append("10JQK")
-                else:
-                    ranks.append(card)
-            return ranks[0] == ranks[1]
+            if len(self.hand) == 2:
+                ranks = []
+                for card in self.hand:
+                    if card == "10" or card in ["J", "Q", "K"]:
+                        ranks.append("10JQK")
+                    else:
+                        ranks.append(card)
+                return ranks[0] == ranks[1]
+            return False
             
     def __init__(self):
-        self.turn_number = 0
         self.decks = 6
         self.deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]*(self.decks*4)
         random.shuffle(self.deck)
@@ -108,10 +117,11 @@ class Blackjack:
     def hit(self):
         # This handles player hitting. Dealer hits are made in the stand function.
         if self.state == self.State.PLAYING and self.turn == self.Turn.PLAYER:
-                self.player.hit(self.deck)
+            self.player.hit(self.deck)
+            if self.player.total() == 21:
+                self.stand()
         if self.player.total() > 21:
             self.state = self.State.LOSE
-        self.turn_number += 1
     
     def determinewinner(self):
         if self.player.difference21() > self.dealer.difference21():
