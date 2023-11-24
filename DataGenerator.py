@@ -7,9 +7,10 @@ def generate_data(num_games):
     player_totals = []
     dealer_upcards = []
     soft = []
+    result = []
 
     for game_number in range(1, num_games + 1):
-        print(f"Game: {game_number}")
+        #print(f"Game: {game_number}")
         bj = Blackjack()
 
         # Player's turn
@@ -46,9 +47,16 @@ def generate_data(num_games):
                 soft.append(0)
 
             actions.append('s')
+            
+  
+        result.append(bj.state)
+
+            
+    print(len(actions))
 
     if not os.path.exists("data"):
         os.makedirs("data")
+    
     
     # Write logs to files
     with open("data\\actions_log.txt", "w") as actions_file:
@@ -58,6 +66,11 @@ def generate_data(num_games):
     with open("data\\totals.txt", "w") as totals_file:
         for i,data in enumerate(player_totals):
             totals_file.write(f"[{data},{dealer_upcards[i]},{soft[i]}]\n")
+
+    with open("data\\results.txt", "w") as results_file:
+        for j in result:
+            results_file.write(str(j) + '\n')
+
 
 if __name__ == "__main__":
     generate_data(100000)

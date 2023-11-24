@@ -6,8 +6,12 @@ from tensorflow import keras
 totals = open("data\\totals.txt").readlines()
 tags = open("data\\actions_log.txt").readlines()
 
+# Added results so it can have another data point
+results = open("data\\results.txt").readlines()
+
 data_clean = []
 tags_clean = []
+results_clean = []
 
 for datum in totals:
 	clean_datum = datum[:datum.index('\n')].strip()
@@ -24,6 +28,14 @@ for tag in tags:
 	else:
 		tags_clean = tags_clean + [ 0 ]
 
+for result in results:
+	result = result[:result.index('\n')]
+	if result == "State.LOSE":
+		results_clean = results_clean + [ 2 ]
+	elif result == "State.WIN":
+		results_clean = results_clean + [ 1 ]
+	else:
+		results_clean = results_clean + [ 3 ]
 
 size = int( len(totals)*(0.75) )
 
@@ -31,6 +43,12 @@ train_data = np.array( data_clean[1:size] )
 train_tags = np.array( tags_clean[1:size] )
 test_data = np.array( data_clean[size:] )
 test_tags = np.array( tags_clean[size:] )
+
+
+train_results = np.array( results_clean[1:len(results)])
+test_results = np.array( tags_clean[len(results):] )
+print(test_results)
+
 
 model = keras.Sequential()
 model.add( keras.layers.Dense( 3, input_dim=3 ) )
