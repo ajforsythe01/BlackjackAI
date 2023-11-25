@@ -16,6 +16,7 @@ def generate_data(num_games):
         # Player's turn
         if bj.state == bj.State.PLAYING:
             while bj.state == bj.State.PLAYING:
+                
                 player_totals.append(bj.player.total())
                 dealer_upcards.append(bj.dealer.value(bj.dealer.hand[0]))
                 if bj.player.is_soft():
@@ -36,7 +37,7 @@ def generate_data(num_games):
                         bj.stand()
                         if bj.state == bj.State.LOSE:
                             action = 'h'         
-            
+                result.append(bj.state)
                 actions.append(action)
         else:
             player_totals.append(bj.player.total())
@@ -47,13 +48,11 @@ def generate_data(num_games):
                 soft.append(0)
 
             actions.append('s')
-            
-  
-        result.append(bj.state)
+            result.append(bj.state)
 
             
     print(len(actions))
-
+    print(len(result))
     if not os.path.exists("data"):
         os.makedirs("data")
     
@@ -66,7 +65,7 @@ def generate_data(num_games):
     with open("data\\totals.txt", "w") as totals_file:
         for i,data in enumerate(player_totals):
             totals_file.write(f"[{data},{dealer_upcards[i]},{soft[i]}]\n")
-
+            #print(i)
     with open("data\\results.txt", "w") as results_file:
         for j in result:
             results_file.write(str(j) + '\n')
