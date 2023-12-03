@@ -24,15 +24,15 @@ for result in results:
 		results_clean = results_clean + [ 3 ]
 	else:
 		results_clean = results_clean + [ 0 ]
-        
-        
+print(len(results_clean))
+
 for datum in totals:
 	clean_datum = datum[: datum.index('\n')].strip()
 	clean_datum = clean_datum[1:-1].split(',')
 	clean_datum[0] = int( clean_datum[0] )
 	clean_datum[1] = int( clean_datum[1] )
 	clean_datum[2] = int( clean_datum[2] )
-	clean_datum.append( int( results_clean[counter_data] ) )
+	clean_datum.append( int(results_clean[counter_data]) )
 	data_clean = data_clean + [ clean_datum ]
 	counter_data = counter_data + 1
     
@@ -43,15 +43,14 @@ for tag in tags:
 		tags_clean = tags_clean + [ 1 ]
 	else:
 		tags_clean = tags_clean + [ 0 ]
+print(len(tags_clean))
 
+size = int( len(totals)*(0.75) )
 
-size1 = int( len(totals)*(0.75) )
-size2 = int( len(tags)*(0.75) )
-
-train_data = np.array( data_clean[1:size1] )
-train_tags = np.array( tags_clean[1:size2] )
-test_data = np.array( data_clean[size1:] )
-test_tags = np.array( tags_clean[size2:] )
+train_data = np.array( data_clean[1:size] )
+train_tags = np.array( tags_clean[1:size] )
+test_data = np.array( data_clean[size:] )
+test_tags = np.array( tags_clean[size:] )
 
 
 model = keras.Sequential()

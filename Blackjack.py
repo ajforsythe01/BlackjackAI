@@ -58,7 +58,7 @@ class Blackjack:
                     self.soft = True
                 else:
                     total += 1
-                    
+
             return total
         
         def difference21(self):
